@@ -5,6 +5,9 @@
   "repository": "https://github.com/Iago-s/clean-node-api.git",
   "author": "iago-s <iagooliveira3845@hotmail.com>",
   "license": "MIT",
+  "standard": {
+    "env": ["jest"]
+  },
   "devDependencies": {
     "husky": "^4.0.0-beta.5",
     "jest": "^27.0.6",
