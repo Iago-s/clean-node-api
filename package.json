@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/Iago-s/clean-node-api.git",
   "author": "iago-s <iagooliveira3845@hotmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "standard": "^16.0.3"
+  }
 }
