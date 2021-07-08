@@ -1,5 +1,6 @@
 const LoginRouter = require('./LoginRouter')
 const MissingParamError = require('../helpers/missing-param-error')
+const UnauthorizedError = require('../helpers/unauthorized-error')
 
 // Evitar quando mudar a instancia de uma classe quebre todos
 // os testes
@@ -90,5 +91,6 @@ describe('login router', () => {
     const httpResponse = sut.route(httpRequest)
 
     expect(httpResponse.statusCode).toBe(401)
+    expect(httpResponse.body).toEqual(new UnauthorizedError())
   })
 })
