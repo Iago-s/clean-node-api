@@ -1,0 +1,64 @@
+const express = require('express')
+const router = express.Router()
+
+module.exports = () => {
+  const route = new SignUpRouter()
+
+  router.post('/signup', ExpressRouterAdapter.adapt(route))
+}
+
+// Adapter que faz o route não depender do req e res do express
+// Se for preciso trocar de framework precisa apenas reescreve as rotas
+// e modificar o adapter
+class ExpressRouterAdapter {
+  static adapt (router) {
+    return async (req, res) => {
+      const httpRequest = {
+        body: req.body
+      }
+      const httpResponse = await router.route(httpRequest)
+
+      res.status(httpResponse.statusCode).json(httpResponse.body)
+    }
+  }
+}
+
+// Presentation Layer
+// Responsabilidade do route validar request e response
+// signup-router
+class SignUpRouter {
+  // Desacoplar o express do route
+  async route (httpRequest) {
+    const { email, password, repeatPassword } = httpRequest.body
+    const user = new SignUpUseCase().signUp(email, password, repeatPassword)
+
+    return {
+      statusCode: 200,
+      body: user
+    }
+  }
+}
+
+// Domain Layer
+// signup-use-case
+// Regras de negocio é acesso ao banco
+class SignUpUseCase {
+  async signUp (email, password, repeatPassword) {
+    if (password === repeatPassword) {
+      new AddAccountRepository().add(email, password)
+    }
+  }
+}
+
+// Infra Layer (frameworks, ORM)
+// add-account-repo
+// Acesso ao banco
+const mongoose = require('mongoose')
+const AccountModel = mongoose.model('Account')
+
+class AddAccountRepository {
+  async add (email, password) {
+    const user = await AccountModel.create({ email, password })
+    return user
+  }
+}
